@@ -9,27 +9,27 @@ class OrdersController < ApplicationController
     order  = create_order(charge)
 
     if order.valid?
+      OrderMailer.order_email(current_user, order).deliver_now
       empty_cart!
       redirect_to order, notice: 'Your Order has been placed.'
     else
-      redirect_to cart_path, flash: { error: order.errors.full_messages.first }
+      redirect_to cart_path, error: order.errors.full_messages.first
     end
 
   rescue Stripe::CardError => e
-    redirect_to cart_path, flash: { error: e.message }
+    redirect_to cart_path, error: e.message
   end
 
   private
 
   def empty_cart!
-    # empty hash means no products in cart :)
     update_cart({})
   end
 
   def perform_stripe_charge
     Stripe::Charge.create(
       source:      params[:stripeToken],
-      amount:      cart_total, # in cents
+      amount:      cart_total,
       description: "Khurram Virani's Jungle Order",
       currency:    'cad'
     )
@@ -39,7 +39,7 @@ class OrdersController < ApplicationController
     order = Order.new(
       email: params[:stripeEmail],
       total_cents: cart_total,
-      stripe_charge_id: stripe_charge.id, # returned by stripe
+      stripe_charge_id: stripe_charge.id,
     )
     cart.each do |product_id, details|
       if product = Product.find_by(id: product_id)
@@ -56,7 +56,6 @@ class OrdersController < ApplicationController
     order
   end
 
-  # returns total in cents not dollars (stripe uses cents as well)
   def cart_total
     total = 0
     cart.each do |product_id, details|

@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
 
+  has_many :reviews
 
   def strip_whitespace
     self.email = self.email.strip unless self.email.nil?

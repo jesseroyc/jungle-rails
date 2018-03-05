@@ -1,0 +1,21 @@
+<article class="review panel panel-default">
+  <header class="panel-heading">
+    <% if current_user && current_user.id == review.user_id %>
+      <%= link_to fa_icon('trash'), [review], class: 'btn btn-sm btn-danger review-delete pull-right', method: :delete, data: { confirm: "Are you sure?" } %>
+    <% end %>
+
+    <% review.rating.times do %>
+      <%= fa_icon('star', class: 'star') %>
+    <% end %>
+
+    <% (5 - review.rating).times do %>
+      <%= fa_icon('star-o', class: 'star') %>
+    <% end %>
+
+  </header>
+  <div class="panel-body">
+    <p class="review description">
+      <%= review.description %>
+    </p>
+  </div>
+</article>
