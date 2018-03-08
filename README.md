@@ -1,7 +1,9 @@
 # Jungle
 
 A mini e-commerce application built with Rails 4.2 for purposes of teaching Rails by example.
+The completed e-commerce project can be viewed at: https://jungle-jesseroyc.c9users.io/
 
+Warning: The above link is for viewing purposes only and is not for real payment processes.
 
 ## Setup
 
